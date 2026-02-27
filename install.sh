@@ -1,13 +1,13 @@
 #!/bin/sh
 # CoinPaprika CLI installer
-# Usage: curl -sSL https://raw.githubusercontent.com/donbagger/coinpaprika-cli/main/install.sh | sh
+# Usage: curl -sSL https://raw.githubusercontent.com/coinpaprika/coinpaprika-cli/main/install.sh | sh
 #
 # Detects your OS/arch, downloads the latest release binary from GitHub, and
 # drops it into ~/.local/bin (or /usr/local/bin with sudo).
 
 set -e
 
-REPO="donbagger/coinpaprika-cli"
+REPO="coinpaprika/coinpaprika-cli"
 BINARY="coinpaprika-cli"
 INSTALL_DIR="${COINPAPRIKA_INSTALL_DIR:-$HOME/.local/bin}"
 

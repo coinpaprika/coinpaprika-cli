@@ -17,7 +17,7 @@ impl ApiClient {
 
         Self {
             http: reqwest::Client::builder()
-                .user_agent("coinpaprika-cli/0.1.0")
+                .user_agent(concat!("coinpaprika-cli/", env!("CARGO_PKG_VERSION")))
                 .build()
                 .expect("failed to build HTTP client"),
             coinpaprika_base,

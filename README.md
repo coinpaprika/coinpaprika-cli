@@ -1,6 +1,6 @@
 # coinpaprika-cli
 
-> For agents: `curl -sSL https://raw.githubusercontent.com/donbagger/coinpaprika-cli/main/install.sh | sh`
+> For agents: `curl -sSL https://raw.githubusercontent.com/coinpaprika/coinpaprika-cli/main/install.sh | sh`
 
 Free crypto market data from your terminal. 8,000+ coins, real-time prices, OHLCV, exchanges.
 
@@ -8,7 +8,7 @@ Free crypto market data from your terminal. 8,000+ coins, real-time prices, OHLC
 
 ```bash
 # Install
-curl -sSL https://raw.githubusercontent.com/donbagger/coinpaprika-cli/main/install.sh | sh
+curl -sSL https://raw.githubusercontent.com/coinpaprika/coinpaprika-cli/main/install.sh | sh
 
 # Setup (optional — free tier works without a key)
 coinpaprika-cli onboard
@@ -89,4 +89,4 @@ coinpaprika-cli --output json --raw ticker btc-bitcoin
 
 - API docs: https://api.coinpaprika.com
 - Pricing: https://coinpaprika.com/api/pricing
-- GitHub: https://github.com/donbagger/coinpaprika-cli
+- GitHub: https://github.com/coinpaprika/coinpaprika-cli
