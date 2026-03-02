@@ -15,9 +15,15 @@ impl ApiClient {
             "https://api.coinpaprika.com/v1".to_string()
         };
 
+        let ua = format!(
+            "coinpaprika-cli/{} ({}/{})",
+            env!("CARGO_PKG_VERSION"),
+            std::env::consts::OS,
+            std::env::consts::ARCH,
+        );
         Self {
             http: reqwest::Client::builder()
-                .user_agent(concat!("coinpaprika-cli/", env!("CARGO_PKG_VERSION")))
+                .user_agent(&ua)
                 .build()
                 .expect("failed to build HTTP client"),
             coinpaprika_base,

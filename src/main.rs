@@ -329,6 +329,10 @@ enum Commands {
     /// Check CoinPaprika API health status and response time
     Status,
 
+    /// Check for CLI updates (compares with latest GitHub release)
+    #[command(name = "check-update")]
+    CheckUpdate,
+
     /// Get ready-to-paste attribution snippets for CoinPaprika
     Attribution,
 
@@ -395,6 +399,7 @@ async fn run_inner(cli: Cli) -> anyhow::Result<()> {
         Commands::Changelog { limit, page } => commands::api_management::execute_changelog(&client, limit, page, output, raw).await,
         Commands::Config(cmd) => commands::config::execute(cmd, output, raw).await,
         Commands::Status => commands::status::execute(&client, output, raw).await,
+        Commands::CheckUpdate => commands::version::execute(output, raw).await,
         Commands::Attribution => commands::attribution::execute(output, raw),
         Commands::Shell => {
             shell::run_shell().await;

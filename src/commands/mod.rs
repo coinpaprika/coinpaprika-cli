@@ -11,6 +11,7 @@ pub mod contracts;
 pub mod api_management;
 pub mod config;
 pub mod status;
+pub mod version;
 pub mod attribution;
 pub mod onboard;
 pub mod plans;
