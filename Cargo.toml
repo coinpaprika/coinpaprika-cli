@@ -1,6 +1,6 @@
 [package]
 name = "coinpaprika-cli"
-version = "0.1.3"
+version = "0.1.7"
 edition = "2021"
 description = "CoinPaprika CLI — crypto market data from the terminal. 8,000+ coins, real-time prices, OHLCV, exchanges."
 license = "MIT"
