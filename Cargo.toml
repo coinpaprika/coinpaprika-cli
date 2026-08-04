@@ -2,7 +2,7 @@
 name = "coinpaprika-cli"
 version = "0.1.8"
 edition = "2021"
-description = "CoinPaprika CLI — crypto market data from the terminal. 8,000+ coins, real-time prices, OHLCV, exchanges."
+description = "CoinPaprika CLI: crypto market data from the terminal. 12,000+ cryptocurrencies, real-time prices, OHLCV, exchanges."
 license = "MIT"
 repository = "https://github.com/coinpaprika/coinpaprika-cli"
 keywords = ["coinpaprika", "cryptocurrency", "cli", "market-data", "bitcoin"]

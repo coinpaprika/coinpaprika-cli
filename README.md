@@ -2,7 +2,7 @@
 
 > For agents: `curl -sSL https://raw.githubusercontent.com/coinpaprika/coinpaprika-cli/main/install.sh | sh`
 
-Free crypto market data from your terminal. 8,000+ coins, real-time prices, OHLCV, exchanges.
+Crypto market data from your terminal. 12,000+ cryptocurrencies, 350+ exchanges, real-time prices, OHLCV. Free tier, no API key needed to start.
 
 ## Quick start
 
@@ -10,7 +10,7 @@ Free crypto market data from your terminal. 8,000+ coins, real-time prices, OHLC
 # Install
 curl -sSL https://raw.githubusercontent.com/coinpaprika/coinpaprika-cli/main/install.sh | sh
 
-# Setup (optional — free tier works without a key)
+# Setup (optional, the free tier works without a key)
 coinpaprika-cli onboard
 
 # Try it
@@ -21,7 +21,7 @@ coinpaprika-cli search ethereum
 
 ## API key setup (3 options)
 
-1. **Config file:** `coinpaprika-cli onboard` — saves to `~/.coinpaprika/config.json`
+1. **Config file:** `coinpaprika-cli onboard`, saves to `~/.coinpaprika/config.json`
 2. **Environment variable:** `export COINPAPRIKA_API_KEY=your-key`
 3. **CLI flag:** `coinpaprika-cli --api-key your-key ticker btc-bitcoin`
 
@@ -29,7 +29,7 @@ Priority: CLI flag > env var > config file.
 
 ## Rate limits & pricing
 
-- **Free tier:** 20,000 calls/mo, no key needed — run `coinpaprika-cli plans` for full details
+- **Free tier:** 20,000 calls/mo, no key needed. Run `coinpaprika-cli plans` for full details
 - **Starter/Business/Enterprise:** [coinpaprika.com/api/pricing](https://coinpaprika.com/api/pricing)
 
 ## All commands
