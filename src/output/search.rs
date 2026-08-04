@@ -21,7 +21,7 @@ pub fn print_search_results(result: &SearchResult) {
         if !currencies.is_empty() {
             println!("Currencies:");
             let rows: Vec<CurrencyRow> = currencies.iter().map(|c| CurrencyRow {
-                rank: c.rank.map(|r| r.to_string()).unwrap_or_else(|| "—".into()),
+                rank: c.rank.map(|r| r.to_string()).unwrap_or_else(|| "-".into()),
                 symbol: c.symbol.clone(),
                 name: truncate(&c.name, 30),
                 id: c.id.clone(),
@@ -35,7 +35,7 @@ pub fn print_search_results(result: &SearchResult) {
         if !exchanges.is_empty() {
             println!("Exchanges:");
             for e in exchanges {
-                println!("  {} — {}", e.id.as_deref().unwrap_or("—"), e.name.as_deref().unwrap_or("—"));
+                println!("  {} · {}", e.id.as_deref().unwrap_or("-"), e.name.as_deref().unwrap_or("-"));
             }
             println!();
         }
@@ -45,9 +45,9 @@ pub fn print_search_results(result: &SearchResult) {
         if !people.is_empty() {
             println!("People:");
             for p in people {
-                println!("  {} — {} (teams: {})",
-                    p.id.as_deref().unwrap_or("—"),
-                    p.name.as_deref().unwrap_or("—"),
+                println!("  {} · {} (teams: {})",
+                    p.id.as_deref().unwrap_or("-"),
+                    p.name.as_deref().unwrap_or("-"),
                     p.teams_count.unwrap_or(0)
                 );
             }
@@ -59,9 +59,9 @@ pub fn print_search_results(result: &SearchResult) {
         if !tags.is_empty() {
             println!("Tags:");
             for t in tags {
-                println!("  {} — {} (coins: {})",
-                    t.id.as_deref().unwrap_or("—"),
-                    t.name.as_deref().unwrap_or("—"),
+                println!("  {} · {} (coins: {})",
+                    t.id.as_deref().unwrap_or("-"),
+                    t.name.as_deref().unwrap_or("-"),
                     t.coin_counter.unwrap_or(0)
                 );
             }
