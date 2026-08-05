@@ -93,10 +93,10 @@ pub async fn execute(output: OutputFormat, raw: bool) -> Result<()> {
     match output {
         OutputFormat::Table => {
             if check.up_to_date {
-                println!("coinpaprika-cli v{} — up to date.", check.current);
+                println!("coinpaprika-cli v{} is up to date.", check.current);
             } else {
                 println!(
-                    "coinpaprika-cli v{} — update available: v{}\n\n  \
+                    "coinpaprika-cli v{}, update available: v{}\n\n  \
                      Update:  cargo install coinpaprika-cli\n  \
                      Release: https://github.com/coinpaprika/coinpaprika-cli/releases/latest",
                     check.current, check.latest

@@ -12,9 +12,9 @@ use std::process::ExitCode;
 #[command(
     name = "coinpaprika-cli",
     version,
-    about = "coinpaprika-cli — Crypto market data for developers and AI agents",
-    long_about = "coinpaprika-cli — Crypto market data for developers and AI agents\n\n\
-                   8,000+ coins · Real-time prices · OHLCV · Exchanges · Market data\n\n\
+    about = "coinpaprika-cli: crypto market data for developers and AI agents",
+    long_about = "coinpaprika-cli: crypto market data for developers and AI agents\n\n\
+                   12,000+ cryptocurrencies · 350+ exchanges · Real-time prices · OHLCV\n\n\
                    Free tier: 20,000 calls/mo, no API key needed\n\
                    Paid plans: full history, 5-min intervals, higher limits\n\n\
                    Quick start:  coinpaprika-cli onboard\n\

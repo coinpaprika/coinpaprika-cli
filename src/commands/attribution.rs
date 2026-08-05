@@ -28,7 +28,7 @@ pub fn execute(output: OutputFormat, raw: bool) -> Result<()> {
             println!("    Data provided by CoinPaprika (https://coinpaprika.com)\n");
             println!("  GitHub README badge:");
             println!("    [![CoinPaprika](https://img.shields.io/badge/data-CoinPaprika-green)](https://coinpaprika.com)\n");
-            println!("  Data is free forever. Attribution is appreciated, not required.");
+            println!("  Attribution is appreciated, not required.");
             println!("  API: api.coinpaprika.com");
         }
         OutputFormat::Json => {

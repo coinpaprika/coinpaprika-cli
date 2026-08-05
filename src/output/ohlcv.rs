@@ -22,12 +22,12 @@ struct OhlcvRow {
 
 pub fn print_ohlcv_table(data: &[OhlcvData]) {
     let rows: Vec<OhlcvRow> = data.iter().map(|d| OhlcvRow {
-        date: d.time_open.as_deref().unwrap_or("—").chars().take(10).collect(),
-        open: d.open.map(format_price).unwrap_or_else(|| "—".into()),
-        high: d.high.map(format_price).unwrap_or_else(|| "—".into()),
-        low: d.low.map(format_price).unwrap_or_else(|| "—".into()),
-        close: d.close.map(format_price).unwrap_or_else(|| "—".into()),
-        volume: d.volume.map(format_usd).unwrap_or_else(|| "—".into()),
+        date: d.time_open.as_deref().unwrap_or("-").chars().take(10).collect(),
+        open: d.open.map(format_price).unwrap_or_else(|| "-".into()),
+        high: d.high.map(format_price).unwrap_or_else(|| "-".into()),
+        low: d.low.map(format_price).unwrap_or_else(|| "-".into()),
+        close: d.close.map(format_price).unwrap_or_else(|| "-".into()),
+        volume: d.volume.map(format_usd).unwrap_or_else(|| "-".into()),
     }).collect();
 
     let table = Table::new(rows).with(Style::rounded()).to_string();

@@ -20,11 +20,11 @@ struct CoinRow {
 
 pub fn print_coins_table(coins: &[CoinListItem]) {
     let rows: Vec<CoinRow> = coins.iter().map(|c| CoinRow {
-        rank: c.rank.map(|r| r.to_string()).unwrap_or_else(|| "—".into()),
+        rank: c.rank.map(|r| r.to_string()).unwrap_or_else(|| "-".into()),
         symbol: c.symbol.clone(),
         name: truncate(&c.name, 30),
-        coin_type: c.coin_type.clone().unwrap_or_else(|| "—".into()),
-        active: c.is_active.map(|a| if a { "Yes" } else { "No" }.to_string()).unwrap_or_else(|| "—".into()),
+        coin_type: c.coin_type.clone().unwrap_or_else(|| "-".into()),
+        active: c.is_active.map(|a| if a { "Yes" } else { "No" }.to_string()).unwrap_or_else(|| "-".into()),
     }).collect();
 
     let table = Table::new(rows).with(Style::rounded()).to_string();
@@ -36,16 +36,16 @@ pub fn print_coin_detail(coin: &CoinDetail) {
     let mut rows: Vec<[String; 2]> = Vec::new();
     detail_field!(rows, "Name", coin.name.clone());
     detail_field!(rows, "Symbol", coin.symbol.clone());
-    detail_field!(rows, "Rank", coin.rank.map(|r| r.to_string()).unwrap_or_else(|| "—".into()));
-    detail_field!(rows, "Type", coin.coin_type.clone().unwrap_or_else(|| "—".into()));
-    detail_field!(rows, "Active", coin.is_active.map(|a| if a { "Yes" } else { "No" }.to_string()).unwrap_or_else(|| "—".into()));
-    detail_field!(rows, "Started", coin.started_at.clone().unwrap_or_else(|| "—".into()));
-    detail_field!(rows, "Proof Type", coin.proof_type.clone().unwrap_or_else(|| "—".into()));
-    detail_field!(rows, "Hash Algorithm", coin.hash_algorithm.clone().unwrap_or_else(|| "—".into()));
-    detail_field!(rows, "Org Structure", coin.org_structure.clone().unwrap_or_else(|| "—".into()));
-    detail_field!(rows, "Dev Status", coin.development_status.clone().unwrap_or_else(|| "—".into()));
-    detail_field!(rows, "Open Source", coin.open_source.map(|v| if v { "Yes" } else { "No" }.to_string()).unwrap_or_else(|| "—".into()));
-    detail_field!(rows, "Hardware Wallet", coin.hardware_wallet.map(|v| if v { "Yes" } else { "No" }.to_string()).unwrap_or_else(|| "—".into()));
+    detail_field!(rows, "Rank", coin.rank.map(|r| r.to_string()).unwrap_or_else(|| "-".into()));
+    detail_field!(rows, "Type", coin.coin_type.clone().unwrap_or_else(|| "-".into()));
+    detail_field!(rows, "Active", coin.is_active.map(|a| if a { "Yes" } else { "No" }.to_string()).unwrap_or_else(|| "-".into()));
+    detail_field!(rows, "Started", coin.started_at.clone().unwrap_or_else(|| "-".into()));
+    detail_field!(rows, "Proof Type", coin.proof_type.clone().unwrap_or_else(|| "-".into()));
+    detail_field!(rows, "Hash Algorithm", coin.hash_algorithm.clone().unwrap_or_else(|| "-".into()));
+    detail_field!(rows, "Org Structure", coin.org_structure.clone().unwrap_or_else(|| "-".into()));
+    detail_field!(rows, "Dev Status", coin.development_status.clone().unwrap_or_else(|| "-".into()));
+    detail_field!(rows, "Open Source", coin.open_source.map(|v| if v { "Yes" } else { "No" }.to_string()).unwrap_or_else(|| "-".into()));
+    detail_field!(rows, "Hardware Wallet", coin.hardware_wallet.map(|v| if v { "Yes" } else { "No" }.to_string()).unwrap_or_else(|| "-".into()));
 
     if let Some(tags) = &coin.tags {
         let tag_names: Vec<String> = tags.iter().map(|t| t.name.clone()).collect();
@@ -80,9 +80,9 @@ struct EventRow {
 
 pub fn print_events_table(events: &[CoinEvent]) {
     let rows: Vec<EventRow> = events.iter().map(|e| EventRow {
-        date: e.date.clone().unwrap_or_else(|| "—".into()),
-        name: truncate(&e.name.clone().unwrap_or_else(|| "—".into()), 50),
-        is_conference: e.is_conference.map(|v| if v { "Yes" } else { "No" }.to_string()).unwrap_or_else(|| "—".into()),
+        date: e.date.clone().unwrap_or_else(|| "-".into()),
+        name: truncate(&e.name.clone().unwrap_or_else(|| "-".into()), 50),
+        is_conference: e.is_conference.map(|v| if v { "Yes" } else { "No" }.to_string()).unwrap_or_else(|| "-".into()),
     }).collect();
 
     let table = Table::new(rows).with(Style::rounded()).to_string();
@@ -101,7 +101,7 @@ struct CoinExchangeRow {
 pub fn print_coin_exchanges_table(exchanges: &[CoinExchange]) {
     let rows: Vec<CoinExchangeRow> = exchanges.iter().map(|e| CoinExchangeRow {
         name: e.name.clone(),
-        volume_share: e.adjusted_volume_24h_share.map(|v| format!("{v:.2}%")).unwrap_or_else(|| "—".into()),
+        volume_share: e.adjusted_volume_24h_share.map(|v| format!("{v:.2}%")).unwrap_or_else(|| "-".into()),
     }).collect();
 
     let table = Table::new(rows).with(Style::rounded()).to_string();
@@ -128,18 +128,18 @@ pub fn print_markets_table(markets: &[CoinMarket]) {
         let (price, volume) = m.quotes.as_ref()
             .and_then(|q| q.get("USD"))
             .map(|usd| {
-                let p = usd.price.map(crate::output::format_price).unwrap_or_else(|| "—".into());
-                let v = usd.volume_24h.map(format_usd).unwrap_or_else(|| "—".into());
+                let p = usd.price.map(crate::output::format_price).unwrap_or_else(|| "-".into());
+                let v = usd.volume_24h.map(format_usd).unwrap_or_else(|| "-".into());
                 (p, v)
             })
-            .unwrap_or_else(|| ("—".into(), "—".into()));
+            .unwrap_or_else(|| ("-".into(), "-".into()));
 
         MarketRow {
-            exchange: m.exchange_name.clone().unwrap_or_else(|| "—".into()),
-            pair: m.pair.clone().unwrap_or_else(|| "—".into()),
+            exchange: m.exchange_name.clone().unwrap_or_else(|| "-".into()),
+            pair: m.pair.clone().unwrap_or_else(|| "-".into()),
             price,
             volume,
-            trust: m.trust_score.clone().unwrap_or_else(|| "—".into()),
+            trust: m.trust_score.clone().unwrap_or_else(|| "-".into()),
         }
     }).collect();
 

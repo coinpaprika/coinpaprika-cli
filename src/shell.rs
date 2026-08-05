@@ -3,7 +3,7 @@ use rustyline::error::ReadlineError;
 use rustyline::DefaultEditor;
 
 pub async fn run_shell() {
-    println!("coinpaprika-cli interactive shell — type commands without 'coinpaprika-cli' prefix");
+    println!("coinpaprika-cli interactive shell: type commands without 'coinpaprika-cli' prefix");
     println!("Type 'exit' or 'quit' to leave. Ctrl+D also exits.\n");
 
     let mut rl = match DefaultEditor::new() {
@@ -44,7 +44,7 @@ pub async fn run_shell() {
             }
             Err(ReadlineError::Interrupted) => {
                 // Ctrl+C: continue
-                println!("(Ctrl+C — type 'exit' to quit)");
+                println!("(Ctrl+C, or type 'exit' to quit)");
             }
             Err(ReadlineError::Eof) => {
                 // Ctrl+D: exit

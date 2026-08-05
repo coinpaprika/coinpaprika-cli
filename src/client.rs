@@ -61,9 +61,9 @@ impl ApiClient {
                              Check your plan:   coinpaprika-cli key-info\n\
                              Upgrade:           https://coinpaprika.com/api/pricing\n\n\
                              Available plans:\n\
-                             \x20 Starter    — Historical data, ticker history, changelog\n\
-                             \x20 Business   — All Starter features + ID mappings, priority support\n\
-                             \x20 Enterprise — Custom limits, dedicated support"
+                             \x20 Starter    : Historical data, ticker history, changelog\n\
+                             \x20 Business   : All Starter features + ID mappings, priority support\n\
+                             \x20 Enterprise : Custom limits, dedicated support"
                         );
                     } else {
                         bail!(
