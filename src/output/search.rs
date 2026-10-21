@@ -2,7 +2,7 @@ use tabled::{Table, Tabled};
 use tabled::settings::Style;
 
 use crate::commands::search::SearchResult;
-use crate::output::{print_coinpaprika_footer, truncate};
+use crate::output::{print_coinpaprika_footer, sanitize, truncate};
 
 #[derive(Tabled)]
 struct CurrencyRow {
@@ -27,7 +27,7 @@ pub fn print_search_results(result: &SearchResult) {
                 id: c.id.clone(),
             }).collect();
             let table = Table::new(rows).with(Style::rounded()).to_string();
-            println!("{table}\n");
+            println!("{}\n", sanitize(&table));
         }
     }
 
@@ -35,7 +35,7 @@ pub fn print_search_results(result: &SearchResult) {
         if !exchanges.is_empty() {
             println!("Exchanges:");
             for e in exchanges {
-                println!("  {} · {}", e.id.as_deref().unwrap_or("-"), e.name.as_deref().unwrap_or("-"));
+                println!("  {} · {}", sanitize(e.id.as_deref().unwrap_or("-")), sanitize(e.name.as_deref().unwrap_or("-")));
             }
             println!();
         }
@@ -46,8 +46,8 @@ pub fn print_search_results(result: &SearchResult) {
             println!("People:");
             for p in people {
                 println!("  {} · {} (teams: {})",
-                    p.id.as_deref().unwrap_or("-"),
-                    p.name.as_deref().unwrap_or("-"),
+                    sanitize(p.id.as_deref().unwrap_or("-")),
+                    sanitize(p.name.as_deref().unwrap_or("-")),
                     p.teams_count.unwrap_or(0)
                 );
             }
@@ -60,8 +60,8 @@ pub fn print_search_results(result: &SearchResult) {
             println!("Tags:");
             for t in tags {
                 println!("  {} · {} (coins: {})",
-                    t.id.as_deref().unwrap_or("-"),
-                    t.name.as_deref().unwrap_or("-"),
+                    sanitize(t.id.as_deref().unwrap_or("-")),
+                    sanitize(t.name.as_deref().unwrap_or("-")),
                     t.coin_counter.unwrap_or(0)
                 );
             }

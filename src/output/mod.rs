@@ -118,13 +118,34 @@ pub fn print_json_wrapped<T: Serialize>(data: &T, meta: ResponseMeta, raw: bool)
     Ok(())
 }
 
+/// Strip C0 control characters (including ESC, 0x00-0x1F), DEL (0x7F) and
+/// C1 control characters (0x80-0x9F) from text that came from the API
+/// before it reaches the terminal.
+///
+/// Table rendering (tabled, with default features) only rewrites tabs; it
+/// does not know about terminal escape sequences. Without this, API text
+/// such as a coin description, a search result name, or a non-2xx response
+/// body could carry a spoofed OSC 8 hyperlink, a terminal title change, or
+/// hidden text straight into the user's terminal. Every API-derived string
+/// that reaches table or plain println!/eprintln! output goes through this
+/// one helper; JSON output is unaffected because serde_json already
+/// escapes control characters.
+pub fn sanitize(s: &str) -> String {
+    s.chars()
+        .filter(|c| {
+            let code = *c as u32;
+            !(code <= 0x1F || code == 0x7F || (0x80..=0x9F).contains(&code))
+        })
+        .collect()
+}
+
 pub fn print_detail_table(rows: Vec<[String; 2]>) {
     let table = Table::from_iter(rows)
         .with(Style::rounded())
         .with(Modify::new(Columns::first()).with(Width::wrap(20)))
         .with(Modify::new(Columns::last()).with(Width::wrap(80)))
         .to_string();
-    println!("{table}");
+    println!("{}", sanitize(&table));
 }
 
 pub fn print_coinpaprika_footer() {
@@ -214,5 +235,33 @@ mod tests {
     #[test]
     fn truncate_address_short() {
         assert_eq!(truncate_address("0x1234567890abcdef"), "0x1234...cdef");
+    }
+
+    #[test]
+    fn sanitize_strips_escape_sequences() {
+        // ESC ] 8 ; ; url BEL ... ESC ] 8 ; ; BEL is an OSC 8 hyperlink.
+        let malicious = "A\u{1b}]8;;https://example.invalid\u{7}B\u{1b}]8;;\u{7}C";
+        let cleaned = sanitize(malicious);
+        assert_eq!(cleaned, "A]8;;https://example.invalidB]8;;C");
+        assert!(!cleaned.contains('\u{1b}'));
+        assert!(!cleaned.contains('\u{7}'));
+    }
+
+    #[test]
+    fn sanitize_strips_c0_del_and_c1() {
+        let s = "a\u{0}b\u{1f}c\u{7f}d\u{80}e\u{9f}f";
+        assert_eq!(sanitize(s), "abcdef");
+    }
+
+    #[test]
+    fn sanitize_keeps_ordinary_text_unchanged() {
+        let s = "Bitcoin is a decentralized digital currency, 2009.";
+        assert_eq!(sanitize(s), s);
+    }
+
+    #[test]
+    fn sanitize_keeps_unicode_text() {
+        let s = "satoshi-nakamoto \u{00e9}\u{00e8} \u{4e2d}\u{6587}";
+        assert_eq!(sanitize(s), s);
     }
 }
