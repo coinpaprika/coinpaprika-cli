@@ -28,7 +28,7 @@ pub fn print_tags_table(tags: &[Tag]) {
     }).collect();
 
     let table = Table::new(rows).with(Style::rounded()).to_string();
-    println!("{table}");
+    println!("{}", crate::output::sanitize(&table));
     print_coinpaprika_footer();
 }
 

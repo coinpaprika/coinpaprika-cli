@@ -1,6 +1,7 @@
 mod client;
 mod config;
 mod commands;
+mod idpath;
 mod output;
 mod shell;
 
@@ -30,7 +31,9 @@ pub(crate) struct Cli {
     #[arg(short, long, global = true, default_value = "table")]
     pub(crate) output: OutputFormat,
 
-    /// CoinPaprika API key (overrides env var and config file)
+    /// CoinPaprika API key (overrides env var and config file; visible to
+    /// other local users via `ps` -- prefer COINPAPRIKA_API_KEY or
+    /// `coinpaprika-cli onboard` instead)
     #[arg(long, global = true)]
     api_key: Option<String>,
 
@@ -343,8 +346,9 @@ enum Commands {
     Plans,
 
     /// Interactive setup wizard (configure API key)
+    #[command(after_help = "Omit --key to be prompted (input hidden). Passing it as an\nargument works for backwards compatibility but is visible to other\nlocal users through the process list.")]
     Onboard {
-        /// API key to save (skips interactive prompts)
+        /// API key to save, skipping interactive prompts (visible to other local users if passed here)
         #[arg(long)]
         key: Option<String>,
     },

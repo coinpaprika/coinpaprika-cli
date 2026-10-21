@@ -76,8 +76,9 @@ pub async fn execute_list(client: &ApiClient, limit: usize, quotes: &str, output
 }
 
 pub async fn execute_detail(client: &ApiClient, exchange_id: &str, quotes: &str, output: OutputFormat, raw: bool) -> Result<()> {
+    let id = crate::idpath::path_segment(exchange_id)?;
     let exchange: Exchange = client.coinpaprika_get(
-        &format!("/exchanges/{exchange_id}"),
+        &format!("/exchanges/{id}"),
         &[("quotes", quotes)],
     ).await?;
     match output {
@@ -90,8 +91,9 @@ pub async fn execute_detail(client: &ApiClient, exchange_id: &str, quotes: &str,
 }
 
 pub async fn execute_markets(client: &ApiClient, exchange_id: &str, limit: usize, quotes: &str, output: OutputFormat, raw: bool) -> Result<()> {
+    let id = crate::idpath::path_segment(exchange_id)?;
     let markets: Vec<ExchangeMarket> = client.coinpaprika_get(
-        &format!("/exchanges/{exchange_id}/markets"),
+        &format!("/exchanges/{id}/markets"),
         &[("quotes", quotes)],
     ).await?;
     let markets: Vec<ExchangeMarket> = markets.into_iter().take(limit).collect();

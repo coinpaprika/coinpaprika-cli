@@ -38,7 +38,7 @@ pub fn print_exchanges_table(exchanges: &[Exchange]) {
     }).collect();
 
     let table = Table::new(rows).with(Style::rounded()).to_string();
-    println!("{table}");
+    println!("{}", crate::output::sanitize(&table));
     print_coinpaprika_footer();
 }
 
@@ -103,6 +103,6 @@ pub fn print_exchange_markets_table(markets: &[ExchangeMarket]) {
     }).collect();
 
     let table = Table::new(rows).with(Style::rounded()).to_string();
-    println!("{table}");
+    println!("{}", crate::output::sanitize(&table));
     print_coinpaprika_footer();
 }

@@ -2,12 +2,12 @@ use tabled::{Table, Tabled};
 use tabled::settings::Style;
 
 use crate::commands::contracts::{Contract, ContractTicker, ContractHistoryPoint};
-use crate::output::{detail_field, format_percent, format_price, format_supply, format_usd, print_coinpaprika_footer, print_detail_table, truncate_address};
+use crate::output::{detail_field, format_percent, format_price, format_supply, format_usd, print_coinpaprika_footer, print_detail_table, sanitize, truncate_address};
 
 pub fn print_platforms(platforms: &[String]) {
     println!("Contract Platforms:");
     for p in platforms {
-        println!("  {p}");
+        println!("  {}", sanitize(p));
     }
     print_coinpaprika_footer();
 }
@@ -33,7 +33,7 @@ pub fn print_contracts_table(contracts: &[Contract]) {
     }).collect();
 
     let table = Table::new(rows).with(Style::rounded()).to_string();
-    println!("{table}");
+    println!("{}", crate::output::sanitize(&table));
     print_coinpaprika_footer();
 }
 
@@ -81,6 +81,6 @@ pub fn print_contract_history(data: &[ContractHistoryPoint]) {
     }).collect();
 
     let table = Table::new(rows).with(Style::rounded()).to_string();
-    println!("{table}");
+    println!("{}", crate::output::sanitize(&table));
     print_coinpaprika_footer();
 }

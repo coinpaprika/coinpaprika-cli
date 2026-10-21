@@ -1,6 +1,7 @@
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 use std::fs;
+use std::io::IsTerminal;
 use std::path::PathBuf;
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -82,6 +83,11 @@ pub fn resolve_api_key(cli_key: Option<&str>) -> Option<String> {
     // 1. CLI flag
     if let Some(key) = cli_key {
         if !key.is_empty() {
+            eprintln!(
+                "warning: the API key came from --api-key, which exposes it to other local \
+                 users on this machine (via `ps`). Prefer COINPAPRIKA_API_KEY, the config \
+                 file (coinpaprika-cli onboard), or piping the key on stdin to `config set-key`."
+            );
             return Some(key.to_string());
         }
     }
@@ -110,6 +116,24 @@ pub fn mask_key(key: &str) -> String {
         return "****".to_string();
     }
     format!("{}...{}", &key[..4], &key[key.len() - 4..])
+}
+
+/// Read an API key from a private channel: a no-echo prompt when stdin is
+/// an interactive terminal, or a single line from stdin when it is piped
+/// (a script or an agent feeding the key in). Either way the key never
+/// appears as a command-line argument, so it is not visible to other local
+/// users through the process list.
+pub fn read_key_interactively(prompt: &str) -> Result<String> {
+    let line = if std::io::stdin().is_terminal() {
+        rpassword::prompt_password(prompt).context("failed to read the key from the terminal")?
+    } else {
+        let mut buf = String::new();
+        std::io::stdin()
+            .read_line(&mut buf)
+            .context("failed to read the key from stdin")?;
+        buf
+    };
+    Ok(line.trim().to_string())
 }
 
 pub fn key_source(cli_key: Option<&str>) -> &'static str {

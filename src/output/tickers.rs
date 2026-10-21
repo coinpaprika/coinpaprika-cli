@@ -37,7 +37,7 @@ pub fn print_tickers_table(tickers: &[Ticker]) {
     }).collect();
 
     let table = Table::new(rows).with(Style::rounded()).to_string();
-    println!("{table}");
+    println!("{}", crate::output::sanitize(&table));
     print_coinpaprika_footer();
 }
 
@@ -92,6 +92,6 @@ pub fn print_history_table(history: &[TickerHistoryPoint]) {
     }).collect();
 
     let table = Table::new(rows).with(Style::rounded()).to_string();
-    println!("{table}");
+    println!("{}", crate::output::sanitize(&table));
     print_coinpaprika_footer();
 }

@@ -29,7 +29,8 @@ pub async fn execute_list(client: &ApiClient, limit: usize, output: OutputFormat
 }
 
 pub async fn execute_detail(client: &ApiClient, tag_id: &str, output: OutputFormat, raw: bool) -> Result<()> {
-    let tag: Tag = client.coinpaprika_get(&format!("/tags/{tag_id}"), &[]).await?;
+    let id = crate::idpath::path_segment(tag_id)?;
+    let tag: Tag = client.coinpaprika_get(&format!("/tags/{id}"), &[]).await?;
     match output {
         OutputFormat::Table => crate::output::tags::print_tag_detail(&tag),
         OutputFormat::Json => {

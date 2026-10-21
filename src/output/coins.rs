@@ -28,7 +28,7 @@ pub fn print_coins_table(coins: &[CoinListItem]) {
     }).collect();
 
     let table = Table::new(rows).with(Style::rounded()).to_string();
-    println!("{table}");
+    println!("{}", crate::output::sanitize(&table));
     print_coinpaprika_footer();
 }
 
@@ -86,7 +86,7 @@ pub fn print_events_table(events: &[CoinEvent]) {
     }).collect();
 
     let table = Table::new(rows).with(Style::rounded()).to_string();
-    println!("{table}");
+    println!("{}", crate::output::sanitize(&table));
     print_coinpaprika_footer();
 }
 
@@ -105,7 +105,7 @@ pub fn print_coin_exchanges_table(exchanges: &[CoinExchange]) {
     }).collect();
 
     let table = Table::new(rows).with(Style::rounded()).to_string();
-    println!("{table}");
+    println!("{}", crate::output::sanitize(&table));
     print_coinpaprika_footer();
 }
 
@@ -144,6 +144,6 @@ pub fn print_markets_table(markets: &[CoinMarket]) {
     }).collect();
 
     let table = Table::new(rows).with(Style::rounded()).to_string();
-    println!("{table}");
+    println!("{}", crate::output::sanitize(&table));
     print_coinpaprika_footer();
 }

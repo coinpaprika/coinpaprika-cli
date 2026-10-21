@@ -38,8 +38,9 @@ pub async fn execute_historical(
         params.push(("end", e));
     }
 
+    let id = crate::idpath::path_segment(coin_id)?;
     let data: Vec<OhlcvData> = client.coinpaprika_get(
-        &format!("/coins/{coin_id}/ohlcv/historical"),
+        &format!("/coins/{id}/ohlcv/historical"),
         &params,
     ).await?;
     match output {
@@ -52,8 +53,9 @@ pub async fn execute_historical(
 }
 
 pub async fn execute_latest(client: &ApiClient, coin_id: &str, quote: &str, output: OutputFormat, raw: bool) -> Result<()> {
+    let id = crate::idpath::path_segment(coin_id)?;
     let data: Vec<OhlcvData> = client.coinpaprika_get(
-        &format!("/coins/{coin_id}/ohlcv/latest"),
+        &format!("/coins/{id}/ohlcv/latest"),
         &[("quote", quote)],
     ).await?;
     match output {
@@ -66,8 +68,9 @@ pub async fn execute_latest(client: &ApiClient, coin_id: &str, quote: &str, outp
 }
 
 pub async fn execute_today(client: &ApiClient, coin_id: &str, quote: &str, output: OutputFormat, raw: bool) -> Result<()> {
+    let id = crate::idpath::path_segment(coin_id)?;
     let data: Vec<OhlcvData> = client.coinpaprika_get(
-        &format!("/coins/{coin_id}/ohlcv/today"),
+        &format!("/coins/{id}/ohlcv/today"),
         &[("quote", quote)],
     ).await?;
     match output {

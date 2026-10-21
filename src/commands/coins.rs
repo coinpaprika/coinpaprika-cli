@@ -129,7 +129,8 @@ pub async fn execute_list(client: &ApiClient, limit: usize, output: OutputFormat
 }
 
 pub async fn execute_detail(client: &ApiClient, coin_id: &str, output: OutputFormat, raw: bool) -> Result<()> {
-    let coin: CoinDetail = client.coinpaprika_get(&format!("/coins/{coin_id}"), &[]).await?;
+    let id = crate::idpath::path_segment(coin_id)?;
+    let coin: CoinDetail = client.coinpaprika_get(&format!("/coins/{id}"), &[]).await?;
     match output {
         OutputFormat::Table => crate::output::coins::print_coin_detail(&coin),
         OutputFormat::Json => {
@@ -140,7 +141,8 @@ pub async fn execute_detail(client: &ApiClient, coin_id: &str, output: OutputFor
 }
 
 pub async fn execute_events(client: &ApiClient, coin_id: &str, limit: usize, output: OutputFormat, raw: bool) -> Result<()> {
-    let events: Vec<CoinEvent> = client.coinpaprika_get(&format!("/coins/{coin_id}/events"), &[]).await?;
+    let id = crate::idpath::path_segment(coin_id)?;
+    let events: Vec<CoinEvent> = client.coinpaprika_get(&format!("/coins/{id}/events"), &[]).await?;
     let events: Vec<CoinEvent> = events.into_iter().take(limit).collect();
     match output {
         OutputFormat::Table => crate::output::coins::print_events_table(&events),
@@ -152,7 +154,8 @@ pub async fn execute_events(client: &ApiClient, coin_id: &str, limit: usize, out
 }
 
 pub async fn execute_exchanges(client: &ApiClient, coin_id: &str, limit: usize, output: OutputFormat, raw: bool) -> Result<()> {
-    let exchanges: Vec<CoinExchange> = client.coinpaprika_get(&format!("/coins/{coin_id}/exchanges"), &[]).await?;
+    let id = crate::idpath::path_segment(coin_id)?;
+    let exchanges: Vec<CoinExchange> = client.coinpaprika_get(&format!("/coins/{id}/exchanges"), &[]).await?;
     let exchanges: Vec<CoinExchange> = exchanges.into_iter().take(limit).collect();
     match output {
         OutputFormat::Table => crate::output::coins::print_coin_exchanges_table(&exchanges),
@@ -164,8 +167,9 @@ pub async fn execute_exchanges(client: &ApiClient, coin_id: &str, limit: usize, 
 }
 
 pub async fn execute_markets(client: &ApiClient, coin_id: &str, quotes: &str, limit: usize, output: OutputFormat, raw: bool) -> Result<()> {
+    let id = crate::idpath::path_segment(coin_id)?;
     let markets: Vec<CoinMarket> = client.coinpaprika_get(
-        &format!("/coins/{coin_id}/markets"),
+        &format!("/coins/{id}/markets"),
         &[("quotes", quotes)],
     ).await?;
     let markets: Vec<CoinMarket> = markets.into_iter().take(limit).collect();

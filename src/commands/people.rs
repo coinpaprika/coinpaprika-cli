@@ -23,7 +23,8 @@ pub struct Position {
 }
 
 pub async fn execute(client: &ApiClient, person_id: &str, output: OutputFormat, raw: bool) -> Result<()> {
-    let person: Person = client.coinpaprika_get(&format!("/people/{person_id}"), &[]).await?;
+    let id = crate::idpath::path_segment(person_id)?;
+    let person: Person = client.coinpaprika_get(&format!("/people/{id}"), &[]).await?;
     match output {
         OutputFormat::Table => crate::output::people::print_person_detail(&person),
         OutputFormat::Json => {

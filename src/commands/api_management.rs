@@ -17,8 +17,8 @@ pub async fn execute_key_info(client: &ApiClient, has_key: bool, output: OutputF
             "No API key configured. The key-info command requires a paid API key.\n\n\
              To get started:\n\
              \x20 Get your key:   https://coinpaprika.com/api/pricing\n\
-             \x20 Set your key:   coinpaprika-cli config set-key <YOUR_KEY>\n\
-             \x20 Or use onboard: coinpaprika-cli onboard\n\n\
+             \x20 Set your key:   coinpaprika-cli onboard\n\
+             \x20 Or:             export COINPAPRIKA_API_KEY=your-key\n\n\
              The free tier works without a key (20,000 calls/mo).\n\
              Run coinpaprika-cli plans to see what's included."
         );

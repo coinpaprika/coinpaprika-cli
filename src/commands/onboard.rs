@@ -3,6 +3,10 @@ use anyhow::Result;
 pub async fn execute(key: Option<String>) -> Result<()> {
     // Non-interactive mode: validate then save the key
     if let Some(key) = key {
+        eprintln!(
+            "warning: --key exposes the API key to other local users on this machine (via \
+             `ps`). Omit it to be prompted instead, or pipe the key on stdin."
+        );
         println!("Validating key...");
         let client = crate::client::ApiClient::new(Some(key.clone()));
         match client.coinpaprika_get::<serde_json::Value>("/key/info", &[]).await {
@@ -42,23 +46,21 @@ pub async fn execute(key: Option<String>) -> Result<()> {
     let input = input.trim().to_lowercase();
 
     if input == "y" || input == "yes" {
-        println!("\nPaste your API key:");
-        let mut key = String::new();
-        std::io::stdin().read_line(&mut key)?;
-        let key = key.trim();
+        let key = crate::config::read_key_interactively("\nPaste your API key (input hidden): ")?;
 
         if key.is_empty() {
             println!("No key entered. You can set it later with:");
-            println!("  coinpaprika-cli config set-key <YOUR_KEY>");
+            println!("  coinpaprika-cli onboard");
+            println!("  (or set COINPAPRIKA_API_KEY in your environment)");
             return Ok(());
         }
 
         // Validate by calling /key-info
         println!("Validating key...");
-        let client = crate::client::ApiClient::new(Some(key.to_string()));
+        let client = crate::client::ApiClient::new(Some(key.clone()));
         match client.coinpaprika_get::<serde_json::Value>("/key/info", &[]).await {
             Ok(info) => {
-                crate::config::save_api_key(key)?;
+                crate::config::save_api_key(&key)?;
                 let plan = info.get("plan")
                     .and_then(|p| p.as_str())
                     .unwrap_or("unknown");
@@ -67,7 +69,7 @@ pub async fn execute(key: Option<String>) -> Result<()> {
             }
             Err(_) => {
                 println!("Could not validate key (it may still work). Saving anyway.");
-                crate::config::save_api_key(key)?;
+                crate::config::save_api_key(&key)?;
                 println!("Saved to {}", crate::config::config_path()?.display());
             }
         }

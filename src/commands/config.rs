@@ -9,10 +9,10 @@ pub enum ConfigCommand {
     /// Show current configuration
     Show,
     /// Set CoinPaprika API key
-    #[command(name = "set-key")]
+    #[command(name = "set-key", after_help = "Omit KEY to be prompted (input hidden), or pipe it on stdin:\n  echo \"$COINPAPRIKA_API_KEY\" | coinpaprika-cli config set-key\nPassing KEY as an argument works for backwards compatibility but is\nvisible to other local users through the process list.")]
     SetKey {
-        /// Your CoinPaprika API key
-        key: String,
+        /// Your CoinPaprika API key (omit to be prompted; visible to other local users if passed here)
+        key: Option<String>,
     },
     /// Reset configuration (delete config file)
     Reset,
@@ -58,6 +58,18 @@ pub async fn execute(cmd: ConfigCommand, output: OutputFormat, raw: bool) -> Res
             }
         }
         ConfigCommand::SetKey { key } => {
+            let key = match key {
+                Some(k) => {
+                    eprintln!(
+                        "warning: passing the key as an argument exposes it to other local \
+                         users on this machine (via `ps`). Omit it next time to be prompted, \
+                         or pipe it on stdin."
+                    );
+                    k.trim().to_string()
+                }
+                None => crate::config::read_key_interactively("CoinPaprika API key (input hidden): ")?,
+            };
+            anyhow::ensure!(!key.is_empty(), "no key provided");
             crate::config::save_api_key(&key)?;
             println!("API key saved to {}", crate::config::config_path()?.display());
             println!("Key: {}", crate::config::mask_key(&key));
