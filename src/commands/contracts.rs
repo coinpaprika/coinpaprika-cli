@@ -65,7 +65,8 @@ pub async fn execute_platforms(client: &ApiClient, output: OutputFormat, raw: bo
 }
 
 pub async fn execute_contracts(client: &ApiClient, platform_id: &str, limit: usize, output: OutputFormat, raw: bool) -> Result<()> {
-    let contracts: Vec<Contract> = client.coinpaprika_get(&format!("/contracts/{platform_id}"), &[]).await?;
+    let id = crate::idpath::path_segment(platform_id)?;
+    let contracts: Vec<Contract> = client.coinpaprika_get(&format!("/contracts/{id}"), &[]).await?;
     let contracts: Vec<Contract> = contracts.into_iter().take(limit).collect();
     match output {
         OutputFormat::Table => crate::output::contracts::print_contracts_table(&contracts),
@@ -77,8 +78,10 @@ pub async fn execute_contracts(client: &ApiClient, platform_id: &str, limit: usi
 }
 
 pub async fn execute_ticker(client: &ApiClient, platform_id: &str, address: &str, output: OutputFormat, raw: bool) -> Result<()> {
+    let platform = crate::idpath::path_segment(platform_id)?;
+    let addr = crate::idpath::path_segment(address)?;
     let ticker: ContractTicker = client.coinpaprika_get(
-        &format!("/contracts/{platform_id}/{address}"),
+        &format!("/contracts/{platform}/{addr}"),
         &[],
     ).await?;
     match output {
@@ -111,8 +114,10 @@ pub async fn execute_history(
         params.push(("end", e));
     }
 
+    let platform = crate::idpath::path_segment(platform_id)?;
+    let addr = crate::idpath::path_segment(address)?;
     let data: Vec<ContractHistoryPoint> = client.coinpaprika_get(
-        &format!("/contracts/{platform_id}/{address}/historical"),
+        &format!("/contracts/{platform}/{addr}/historical"),
         &params,
     ).await?;
     match output {

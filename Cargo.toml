@@ -23,6 +23,7 @@ anyhow = "1"
 chrono = { version = "0.4", features = ["serde"] }
 dirs = "6"
 rustyline = "15"
+percent-encoding = "2.3.2"
 
 [dev-dependencies]
 assert_cmd = "2"

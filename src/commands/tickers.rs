@@ -64,8 +64,9 @@ pub async fn execute_list(client: &ApiClient, limit: usize, quotes: &str, output
 }
 
 pub async fn execute_detail(client: &ApiClient, coin_id: &str, quotes: &str, output: OutputFormat, raw: bool) -> Result<()> {
+    let id = crate::idpath::path_segment(coin_id)?;
     let ticker: Ticker = client.coinpaprika_get(
-        &format!("/tickers/{coin_id}"),
+        &format!("/tickers/{id}"),
         &[("quotes", quotes)],
     ).await?;
     match output {
@@ -99,8 +100,9 @@ pub async fn execute_history(
         params.push(("end", e));
     }
 
+    let id = crate::idpath::path_segment(coin_id)?;
     let history: Vec<TickerHistoryPoint> = client.coinpaprika_get(
-        &format!("/tickers/{coin_id}/historical"),
+        &format!("/tickers/{id}/historical"),
         &params,
     ).await?;
     match output {
