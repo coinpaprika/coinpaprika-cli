@@ -66,6 +66,7 @@ download_and_install() {
 
     ARCHIVE="${BINARY}-${VERSION}-${PLATFORM}.${EXT}"
     URL="https://github.com/${REPO}/releases/download/${VERSION}/${ARCHIVE}"
+    SUMS_URL="https://github.com/${REPO}/releases/download/${VERSION}/SHA256SUMS"
 
     TMPDIR=$(mktemp -d)
     trap 'rm -rf "$TMPDIR"' EXIT
@@ -73,17 +74,53 @@ download_and_install() {
     info "Downloading ${URL}..."
     curl -sSfL "$URL" -o "${TMPDIR}/${ARCHIVE}" || err "Download failed. Check that a release exists for your platform (${PLATFORM}).\nURL: ${URL}"
 
+    info "Verifying checksum..."
+    curl -sSfL "$SUMS_URL" -o "${TMPDIR}/SHA256SUMS" || err "Could not download SHA256SUMS for ${VERSION} from the same release. Refusing to install an unverified binary."
+
+    EXPECTED=$(awk -v f="$ARCHIVE" '{ name=$2; sub(/^\*/, "", name); if (name == f) print $1 }' "${TMPDIR}/SHA256SUMS")
+    [ -z "$EXPECTED" ] && err "No checksum entry for ${ARCHIVE} in SHA256SUMS. Refusing to install an unverified binary."
+
+    if command -v sha256sum >/dev/null 2>&1; then
+        ACTUAL=$(sha256sum "${TMPDIR}/${ARCHIVE}" | awk '{print $1}')
+    elif command -v shasum >/dev/null 2>&1; then
+        ACTUAL=$(shasum -a 256 "${TMPDIR}/${ARCHIVE}" | awk '{print $1}')
+    else
+        err "Neither sha256sum nor shasum is available to verify the download."
+    fi
+
+    [ "$EXPECTED" = "$ACTUAL" ] || err "Checksum mismatch for ${ARCHIVE}.\nExpected: ${EXPECTED}\nGot:      ${ACTUAL}\nRefusing to install."
+    ok "Checksum verified."
+
     info "Extracting..."
+    EXTRACT_DIR="${TMPDIR}/extract"
+    mkdir -p "$EXTRACT_DIR"
+    LISTING="${TMPDIR}/listing.txt"
+
     if [ "$EXT" = "zip" ]; then
         need unzip
-        unzip -q "${TMPDIR}/${ARCHIVE}" -d "$TMPDIR"
+        unzip -Z1 "${TMPDIR}/${ARCHIVE}" > "$LISTING"
     else
-        tar xzf "${TMPDIR}/${ARCHIVE}" -C "$TMPDIR"
+        tar tzf "${TMPDIR}/${ARCHIVE}" > "$LISTING"
+    fi
+
+    # Reject any archive member that could escape EXTRACT_DIR before we
+    # extract anything.
+    while IFS= read -r member; do
+        case "$member" in
+            /*) err "Refusing to extract archive member with an absolute path: ${member}" ;;
+            *..*) err "Refusing to extract archive member containing '..': ${member}" ;;
+        esac
+    done < "$LISTING"
+
+    if [ "$EXT" = "zip" ]; then
+        unzip -q "${TMPDIR}/${ARCHIVE}" -d "$EXTRACT_DIR"
+    else
+        tar xzf "${TMPDIR}/${ARCHIVE}" -C "$EXTRACT_DIR"
     fi
 
     # Find the binary (it may be at the top level or inside a directory)
-    BIN_PATH=$(find "$TMPDIR" -name "$BINARY" -type f | head -1)
-    [ -z "$BIN_PATH" ] && BIN_PATH=$(find "$TMPDIR" -name "${BINARY}.exe" -type f | head -1)
+    BIN_PATH=$(find "$EXTRACT_DIR" -name "$BINARY" -type f | head -1)
+    [ -z "$BIN_PATH" ] && BIN_PATH=$(find "$EXTRACT_DIR" -name "${BINARY}.exe" -type f | head -1)
     [ -z "$BIN_PATH" ] && err "Could not find '${BINARY}' binary in the archive"
 
     chmod +x "$BIN_PATH"
