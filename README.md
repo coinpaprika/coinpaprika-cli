@@ -19,13 +19,22 @@ coinpaprika-cli global
 coinpaprika-cli search ethereum
 ```
 
-## API key setup (3 options)
+## API key setup
 
-1. **Config file:** `coinpaprika-cli onboard`, saves to `~/.coinpaprika/config.json`
+Prefer these two: neither one puts the key where other local users can read
+it with `ps`.
+
+1. **Config file:** `coinpaprika-cli onboard` prompts for the key (input
+   hidden) and saves it to `~/.coinpaprika/config.json` (0600). You can also
+   pipe the key in: `echo "$KEY" | coinpaprika-cli config set-key`.
 2. **Environment variable:** `export COINPAPRIKA_API_KEY=your-key`
-3. **CLI flag:** `coinpaprika-cli --api-key your-key ticker btc-bitcoin`
 
-Priority: CLI flag > env var > config file.
+A `--api-key` flag and a `config set-key <KEY>` / `onboard --key <KEY>`
+argument form still work for backwards compatibility, but command-line
+arguments are visible to every other user on a shared machine through the
+process list, so the CLI prints a warning whenever the key arrives that way.
+
+Priority: `--api-key` flag > env var > config file.
 
 ## Rate limits & pricing
 
@@ -64,7 +73,7 @@ Priority: CLI flag > env var > config file.
 | `mappings` | ID mappings [Business+] | `coinpaprika-cli mappings` |
 | `changelog` | Coin ID changelog [Starter+] | `coinpaprika-cli changelog` |
 | `config show` | Show config | `coinpaprika-cli config show` |
-| `config set-key` | Set API key | `coinpaprika-cli config set-key <KEY>` |
+| `config set-key` | Set API key (prompts if KEY omitted) | `coinpaprika-cli config set-key` |
 | `config reset` | Delete config | `coinpaprika-cli config reset` |
 | `plans` | Free tier details & paid overview | `coinpaprika-cli plans` |
 | `status` | API health check | `coinpaprika-cli status` |

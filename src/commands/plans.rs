@@ -47,7 +47,7 @@ pub fn execute(output: OutputFormat, raw: bool) -> Result<()> {
             sla: false,
         },
         paid_plans_url: "https://coinpaprika.com/api/pricing",
-        set_key_command: "coinpaprika-cli config set-key <KEY>",
+        set_key_command: "coinpaprika-cli onboard",
     };
 
     match output {
@@ -83,7 +83,7 @@ pub fn execute(output: OutputFormat, raw: bool) -> Result<()> {
             println!("  higher limits, WebSockets, commercial use, and priority support.");
             println!();
             println!("  See current pricing:  https://coinpaprika.com/api/pricing");
-            println!("  Set your API key:     coinpaprika-cli config set-key <KEY>");
+            println!("  Set your API key:     coinpaprika-cli onboard");
             println!();
         }
         OutputFormat::Json => {
